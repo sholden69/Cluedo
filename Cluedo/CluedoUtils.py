@@ -4,6 +4,30 @@ rooms=['Hall','Lounge','Dining Room','Kitchen','Ballroom','Conservatory','Billia
 people=['Miss Scarlet','Reverend Green','Mr Peacock','Mrs White','Professor Plum','Colonel Mustard']
 weapons=['Dagger','Candlestick','Revolver','Rope','Lead Piping','Spanner']
 
+class guess:
+    def __init__(self):
+        self.room=""
+        self.weapon=""
+        self.person=""
+        print("guess initialized")
+
+    def human_populate_guess(self):
+        for i in range (len(rooms)):
+            print(i+1,".",rooms[i])
+        room_int=input("Pick a room [1.."+str(len(rooms))+"]")
+        self.room=rooms[int(room_int)-1]
+        for i in range (len(people)):
+            print(i+1,".",people[i])
+        people_int=input("Pick a person [1.."+str(len(rooms))+"]")
+        self.person=people[int(people_int)-1]
+        for i in range (len(weapons)):
+            print(i+1,".",weapons[i])
+        weapon_int=input("Pick a weapon [1.."+str(len(rooms))+"]")
+        self.weapon=weapons[int(weapon_int)-1]
+        print("guess:"+self.person+" "+self.weapon+" "+self.room)
+
+    def computer_populate_guess(self):
+        return
 
 class scoreCard:
     def __init__(self):
@@ -66,12 +90,14 @@ class CluedoGame:
     def revealSecret(self):
         print("Top Secret:", self.killer, self.murder_room, self.murder_weapon)
 
+    def ask_question(self, myGuess):
+        print("asking a question")
+        return
+
 def startGame(numPlayers):
     assert numPlayers>1,"Must be more than 1 player"
 
     cg=CluedoGame(numPlayers)
     return cg
 
-def guess():
-#given a room + weapon + person, returns false if no player has any else the player number and card
-    print ("guess")
+

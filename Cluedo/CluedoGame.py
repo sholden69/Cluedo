@@ -11,7 +11,9 @@ def main():
         cg.gamecards[0].printme()
         print("make a move")
         print("ask a question")
-        print("check for answer")
+        gs=cu.guess()
+        gs.human_populate_guess()
+        cg.ask_question(gs)
         gameOn=False
 
 main()
