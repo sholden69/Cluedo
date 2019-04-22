@@ -9,7 +9,6 @@ class guess:
         self.room=""
         self.weapon=""
         self.person=""
-        print("guess initialized")
 
     def human_populate_guess(self):
         for i in range (len(rooms)):
@@ -26,7 +25,13 @@ class guess:
         self.weapon=weapons[int(weapon_int)-1]
         print("guess:"+self.person+" "+self.weapon+" "+self.room)
 
-    def computer_populate_guess(self) -> object:
+    def computer_populate_guess(self,thisScoreCard):
+        print("Building computer guess...")
+        thisScoreCard.printme()
+        remRooms={r:b for r,b in thisScoreCard.roomMarks.items() if b==False}
+        remPeople = {r: b for r, b in thisScoreCard.roomPeople.items() if b == False}
+        remWeapons= {r: b for r, b in thisScoreCard.roomWeapons.items() if b == False}
+        # Pick a random from each and put them in case.
         return
 
 class scoreCard:

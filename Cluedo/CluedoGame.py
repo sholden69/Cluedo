@@ -19,7 +19,7 @@ def main():
             cg.gamecards[0].printme()
             gs.human_populate_guess()
         else:
-            gs.computer_populate_guess()
+            gs.computer_populate_guess(cg.gamecards[currentPlayer-1])
 
         # Now ask a question
         print("ask a question")
