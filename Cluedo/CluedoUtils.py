@@ -28,11 +28,16 @@ class guess:
     def computer_populate_guess(self,thisScoreCard):
         print("Building computer guess...")
         thisScoreCard.printme()
-        remRooms={r:b for r,b in thisScoreCard.roomMarks.items() if b==False}
-        remPeople = {r: b for r, b in thisScoreCard.roomPeople.items() if b == False}
-        remWeapons= {r: b for r, b in thisScoreCard.roomWeapons.items() if b == False}
+        remRooms=[r for r,b in thisScoreCard.roomMarks.items() if b==False]
+        remPeople = [r for r, b in thisScoreCard.peopleMarks.items() if b == False]
+        remWeapons= [r for r, b in thisScoreCard.weaponMarks.items() if b == False]
         # Pick a random from each and put them in case.
-        return
+        self.room=rd.choice(remRooms)
+        self.person = rd.choice(remPeople)
+        self.weapon = rd.choice(remWeapons)
+
+
+
 
 class scoreCard:
     def __init__(self):
@@ -54,6 +59,13 @@ class scoreCard:
             if card in people:
                 dict.update(self.peopleMarks,{card:True})
 
+    def markScorecard(self, acard):
+        if acard in rooms:
+            dict.update(self.roomMarks,{acard:True})
+        if acard in weapons:
+            dict.update(self.weaponMarks,{acard:True})
+        if acard in people:
+            dict.update(self.peopleMarks,{acard:True})
 
     def printme(self):
         print("Card Status:")
@@ -63,7 +75,7 @@ class scoreCard:
 
 class CluedoGame:
     def __init__(self,numPlayers):
-        self.test=""
+        self.numPlayers=numPlayers
         # make a copy of the play lists that we can chop
         cpyRooms = rooms
         cpyPeople = people
@@ -96,12 +108,68 @@ class CluedoGame:
         print("Top Secret:", self.killer, self.murder_room, self.murder_weapon)
 
     def ask_question(self, aGuess, playerNumber):
-        print("asking a question")
-        return
+        print("guess from player"+str(playerNumber))
+        print(aGuess.weapon+"-"+aGuess.person+"-"+aGuess.room)
+
+        #start with next player
+        checkPlayer=playerNumber+1
+        if (checkPlayer>self.numPlayers):
+                checkPlayer=1
+        foundMatch=False
+        while (foundMatch==False and checkPlayer!=playerNumber):
+            print("checking hand vs player "+str(checkPlayer))
+
+            #look at self.hands[checkPlayer] for any matches
+            matches=[]
+            for i in range(len(self.hands[checkPlayer-1])):
+                thisCard=self.hands[checkPlayer-1][i-1]
+                if (aGuess.person==thisCard):
+                    matches.append(thisCard)
+                if (aGuess.room == thisCard):
+                    matches.append(thisCard)
+                if (aGuess.weapon==thisCard):
+                    matches.append(thisCard)
+
+            if (len(matches)>0):
+                foundMatch=True
+                for i in range(len(matches)):
+                    print(matches[i-1])
+
+                if (checkPlayer==1):
+                    print("will need to prompt player which card to show - random for now")
+                    showCard = rd.choice(matches)
+                else:
+                    showCard=rd.choice(matches)
+                    print("use an algorithm to find which card to show")
+            else :
+                checkPlayer = checkPlayer+1
+                if (checkPlayer > self.numPlayers):
+                    checkPlayer = 1
+
+        #Mark the gameCard if there's a match
+        if (foundMatch==True):
+            print("found a match with player"+str(checkPlayer))
+            #only show the card for player 1
+            if (playerNumber==1):
+                print(showCard)
+            self.gamecards[playerNumber-1].markScorecard(showCard)
+            # Mark the card self.gamecards[playerNumber]
+        else:
+            print("no match found")
+        return foundMatch
+
+    def KnowAnswer(self, aPlayer):
+        print("returns true if the current player has only one choice left on each card")
+        return False
+
+    def GetAnswer(self, aPlayer):
+        print("returns a guess object containing the answer if aPlayer has only one choice left in each category")
+        finalGuess: guess = guess()
+        return finalGuess
+
 
 def startGame(numPlayers):
     assert numPlayers>1,"Must be more than 1 player"
-
     cg=CluedoGame(numPlayers)
     return cg
 

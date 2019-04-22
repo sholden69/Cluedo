@@ -7,7 +7,7 @@ def main():
     gameOn=True
     currentPlayer=1
     while gameOn:
-        print("Player "+str(currentPlayer)+":")
+        print("********* Player "+str(currentPlayer)+"***************")
         print("make a move - will come here")
 
         # Now sort out a guess
@@ -23,11 +23,16 @@ def main():
 
         # Now ask a question
         print("ask a question")
-        cg.ask_question(gs,currentPlayer)
-        gameOn=False
+        if cg.ask_question(gs,currentPlayer):
+            if cg.KnowAnswer(currentPlayer):
+                print("Player "+str(currentPlayer)+" knows the answer")
+                finalAnswer=cg.GetAnswer(currentPlayer)
 
+                gameOn=False
+                exit(0)
         gameOn=(input("Is Game Over Y/N)")=="N")
 
+        # Move on to the next player
         currentPlayer=currentPlayer+1
         if (currentPlayer>3):
             currentPlayer=1
