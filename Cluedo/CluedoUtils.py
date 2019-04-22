@@ -26,7 +26,7 @@ class guess:
         self.weapon=weapons[int(weapon_int)-1]
         print("guess:"+self.person+" "+self.weapon+" "+self.room)
 
-    def computer_populate_guess(self):
+    def computer_populate_guess(self) -> object:
         return
 
 class scoreCard:
@@ -90,7 +90,7 @@ class CluedoGame:
     def revealSecret(self):
         print("Top Secret:", self.killer, self.murder_room, self.murder_weapon)
 
-    def ask_question(self, myGuess):
+    def ask_question(self, aGuess, playerNumber):
         print("asking a question")
         return
 
