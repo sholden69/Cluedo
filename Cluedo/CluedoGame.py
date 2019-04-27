@@ -1,13 +1,21 @@
 import CluedoUtils as cu
 
 def main():
+    numPlayers=3
     print("CLUEDO")
-    cg=cu.startGame(3)
+    cg=cu.startGame(numPlayers)
     cg.revealSecret()
     gameOn=True
     currentPlayer=1
     while gameOn:
         print("********* Player "+str(currentPlayer)+"***************")
+        if cg.KnowAnswer(currentPlayer):
+            print("move to the middle to win the game with")
+            finalAnswer = cg.GetAnswer(currentPlayer)
+            print(finalAnswer.person, " in", finalAnswer.room, " with ", finalAnswer.weapon)
+            gameOn = False
+            exit(0)
+
         print("make a move - will come here")
 
         # Now sort out a guess
@@ -15,24 +23,22 @@ def main():
         if (currentPlayer==1):
             #it's you
             print("My hand:", cg.hands[0])
+            cg.gamecards[0].printme()
             gs.human_populate_guess(cg.gamecards[0])
         else:
             gs.computer_populate_guess(cg.gamecards[currentPlayer-1])
 
         # Now ask a question
         print("ask a question")
-        if cg.ask_question(gs,currentPlayer):
-            if cg.KnowAnswer(currentPlayer):
-                print("Player "+str(currentPlayer)+" knows the answer")
-                finalAnswer=cg.GetAnswer(currentPlayer)
+        cg.ask_question(gs,currentPlayer)
 
-                gameOn=False
-                exit(0)
-        gameOn=(input("Is Game Over Y/N)")=="N")
+        #Check to continue after human player go
+        if currentPlayer==1:
+            gameOn=(input("Is Game Over Y/N)")=="N")
 
         # Move on to the next player
         currentPlayer=currentPlayer+1
-        if (currentPlayer>3):
+        if (currentPlayer>numPlayers):
             currentPlayer=1
 
 main()

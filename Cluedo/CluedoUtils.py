@@ -1,8 +1,8 @@
 import random as rd
 
-rooms=['Hall','Lounge','Dining Room','Kitchen','Ballroom','Conservatory','Billiard Room','Library','Study']
-people=['Miss Scarlet','Reverend Green','Mr Peacock','Mrs White','Professor Plum','Colonel Mustard']
-weapons=['Dagger','Candlestick','Revolver','Rope','Lead Piping','Spanner']
+rooms=('Hall','Lounge','Dining Room','Kitchen','Ballroom','Conservatory','Billiard Room','Library','Study')
+people=('Miss Scarlet','Reverend Green','Mr Peacock','Mrs White','Professor Plum','Colonel Mustard')
+weapons=('Dagger','Candlestick','Revolver','Rope','Lead Piping','Spanner')
 
 class guess:
     def __init__(self):
@@ -27,7 +27,7 @@ class guess:
                print(i+1,".",personStr+"(Y)")
            else:
             print(i+1,".",personStr)
-        people_int=input("Pick a person [1.."+str(len(rooms))+"]")
+        people_int=input("Pick a person [1.."+str(len(people))+"]")
         self.person=people[int(people_int)-1]
 
 
@@ -37,12 +37,11 @@ class guess:
                 print(i+1,".",weaponStr+"(Y)")
             else:
                 print(i+1,".",weaponStr)
-        weapon_int=input("Pick a weapon [1.."+str(len(rooms))+"]")
+        weapon_int=input("Pick a weapon [1.."+str(len(weapons))+"]")
         self.weapon=weapons[int(weapon_int)-1]
         print("guess:"+self.person+" "+self.weapon+" "+self.room)
 
     def computer_populate_guess(self,thisScoreCard):
-        print("Building computer guess...")
         thisScoreCard.printme()
         remRooms=[r for r,b in thisScoreCard.roomMarks.items() if b==False]
         remPeople = [r for r, b in thisScoreCard.peopleMarks.items() if b == False]
@@ -51,9 +50,6 @@ class guess:
         self.room=rd.choice(remRooms)
         self.person = rd.choice(remPeople)
         self.weapon = rd.choice(remWeapons)
-
-
-
 
 class scoreCard:
     def __init__(self):
@@ -84,7 +80,6 @@ class scoreCard:
             dict.update(self.peopleMarks,{acard:True})
 
     def printme(self):
-        print("Score Card:")
         print(self.roomMarks)
         print(self.weaponMarks)
         print(self.peopleMarks)
@@ -93,9 +88,9 @@ class CluedoGame:
     def __init__(self,numPlayers):
         self.numPlayers=numPlayers
         # make a copy of the play lists that we can chop
-        cpyRooms = rooms
-        cpyPeople = people
-        cpyWeapons = weapons
+        cpyRooms = list(rooms)
+        cpyPeople = list(people)
+        cpyWeapons = list(weapons)
 
         # take one card from each list, concatenate and then shuffle
         self.killer = cpyPeople.pop(rd.randint(0, len(cpyPeople) - 1))
@@ -148,11 +143,8 @@ class CluedoGame:
 
             if (len(matches)>0):
                 foundMatch=True
-                for i in range(len(matches)):
-                    print(matches[i-1])
-
                 if (checkPlayer==1):
-                    print("will need to prompt player which card to show - random for now")
+                    # will need to prompt player which card to show - random for now#
                     showCard = rd.choice(matches)
                 else:
                     #pick a card at random to show
@@ -174,17 +166,32 @@ class CluedoGame:
         else:
             print("no match found")
             #will need to do some special code here when no match found to knock out all the options if we didnt have the card
+            if aGuess.person not in self.hands[playerNumber-1]:
+                # mark everything other than aGuess.Person=True
+                for  p in people:
+                    if p!=aGuess.person:
+                        dict.update(self.gamecards[playerNumber-1].peopleMarks, {p: True})
+            if aGuess.weapon not in self.hands[playerNumber-1]:
+                # mark everything other than aGuess.Person=True
+                for  w in weapons:
+                    if w!=aGuess.weapon:
+                        dict.update(self.gamecards[playerNumber - 1].weaponMarks, {w: True})
+            if aGuess.room not in self.hands[playerNumber-1]:
+                # mark everything other than aGuess.Person=True
+                for  r in rooms:
+                    if r!=aGuess.room:
+                        dict.update(self.gamecards[playerNumber - 1].roomMarks, {r: True})
         return foundMatch
 
     def KnowAnswer(self, playerNum):
-        print("returns true if the current player has only one choice left on each card")
+        # returns true if the current player has only one choice left on each card
         return ( len([r for r, b in self.gamecards[playerNum-1].roomMarks.items() if b == False])==1 and \
-                 len([r for r, b in self.gamecards[playerNum-1].peopleMarks.items() if b == False])==0 and \
-                 len ([r for r, b in self.gamecards[playerNum-1].weaponMarks.items() if b == False])==0)
+                 len([r for r, b in self.gamecards[playerNum-1].peopleMarks.items() if b == False])==1 and \
+                 len ([r for r, b in self.gamecards[playerNum-1].weaponMarks.items() if b == False])==1)
 
 
-    def GetAnswer(self, aPlayer):
-        print("returns a guess object containing the answer if aPlayer has only one choice left in each category")
+    def GetAnswer(self, playerNum):
+        # returns a guess object containing the answer if aPlayer has only one choice left in each category
         finalGuess: guess = guess()
         finalGuess.room=[r for r, b in self.gamecards[playerNum - 1].roomMarks.items() if b == False][0]
         finalGuess.person = [r for r, b in self.gamecards[playerNum - 1].peopleMarks.items() if b == False][0]
