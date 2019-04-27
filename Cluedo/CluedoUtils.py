@@ -10,17 +10,33 @@ class guess:
         self.weapon=""
         self.person=""
 
-    def human_populate_guess(self):
+    def human_populate_guess(self,thisScoreCard):
         for i in range (len(rooms)):
-            print(i+1,".",rooms[i])
+            #scard is a gamecard
+            roomStr=rooms[i]
+            if thisScoreCard.roomMarks[roomStr]==True:
+              print(i+1,".",roomStr+"(Y)")
+            else:
+              print(i + 1, ".", roomStr)
         room_int=input("Pick a room [1.."+str(len(rooms))+"]")
         self.room=rooms[int(room_int)-1]
+
         for i in range (len(people)):
-            print(i+1,".",people[i])
+           personStr=people[i]
+           if thisScoreCard.peopleMarks[personStr]==True:
+               print(i+1,".",personStr+"(Y)")
+           else:
+            print(i+1,".",personStr)
         people_int=input("Pick a person [1.."+str(len(rooms))+"]")
         self.person=people[int(people_int)-1]
+
+
         for i in range (len(weapons)):
-            print(i+1,".",weapons[i])
+            weaponStr=weapons[i]
+            if thisScoreCard.weaponMarks[weaponStr]==True:
+                print(i+1,".",weaponStr+"(Y)")
+            else:
+                print(i+1,".",weaponStr)
         weapon_int=input("Pick a weapon [1.."+str(len(rooms))+"]")
         self.weapon=weapons[int(weapon_int)-1]
         print("guess:"+self.person+" "+self.weapon+" "+self.room)
@@ -68,7 +84,7 @@ class scoreCard:
             dict.update(self.peopleMarks,{acard:True})
 
     def printme(self):
-        print("Card Status:")
+        print("Score Card:")
         print(self.roomMarks)
         print(self.weaponMarks)
         print(self.peopleMarks)
@@ -139,8 +155,9 @@ class CluedoGame:
                     print("will need to prompt player which card to show - random for now")
                     showCard = rd.choice(matches)
                 else:
+                    #pick a card at random to show
                     showCard=rd.choice(matches)
-                    print("use an algorithm to find which card to show")
+
             else :
                 checkPlayer = checkPlayer+1
                 if (checkPlayer > self.numPlayers):

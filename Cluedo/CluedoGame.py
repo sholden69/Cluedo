@@ -15,9 +15,7 @@ def main():
         if (currentPlayer==1):
             #it's you
             print("My hand:", cg.hands[0])
-            print("My Score Card:")
-            cg.gamecards[0].printme()
-            gs.human_populate_guess()
+            gs.human_populate_guess(cg.gamecards[0])
         else:
             gs.computer_populate_guess(cg.gamecards[currentPlayer-1])
 
