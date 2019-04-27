@@ -156,15 +156,22 @@ class CluedoGame:
             # Mark the card self.gamecards[playerNumber]
         else:
             print("no match found")
+            #will need to do some special code here when no match found to knock out all the options if we didnt have the card
         return foundMatch
 
-    def KnowAnswer(self, aPlayer):
+    def KnowAnswer(self, playerNum):
         print("returns true if the current player has only one choice left on each card")
-        return False
+        return ( len([r for r, b in self.gamecards[playerNum-1].roomMarks.items() if b == False])==1 and \
+                 len([r for r, b in self.gamecards[playerNum-1].peopleMarks.items() if b == False])==0 and \
+                 len ([r for r, b in self.gamecards[playerNum-1].weaponMarks.items() if b == False])==0)
+
 
     def GetAnswer(self, aPlayer):
         print("returns a guess object containing the answer if aPlayer has only one choice left in each category")
         finalGuess: guess = guess()
+        finalGuess.room=[r for r, b in self.gamecards[playerNum - 1].roomMarks.items() if b == False][0]
+        finalGuess.person = [r for r, b in self.gamecards[playerNum - 1].peopleMarks.items() if b == False][0]
+        finalGuess.weapon = [r for r, b in self.gamecards[playerNum - 1].weaponMarks.items() if b == False][0]
         return finalGuess
 
 
