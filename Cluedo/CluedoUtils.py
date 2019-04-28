@@ -11,30 +11,30 @@ class guess:
         self.person=""
 
     def human_populate_guess(self,thisScoreCard):
-        for i in range (len(rooms)):
-            #scard is a gamecard
-            roomStr=rooms[i]
-            if thisScoreCard.roomMarks[roomStr]==True:
-              print(i+1,".",roomStr+"(Y)")
-            else:
-              print(i + 1, ".", roomStr)
-        room_int=input("Pick a room [1.."+str(len(rooms))+"]")
-        self.room=rooms[int(room_int)-1]
 
         for i in range (len(people)):
            personStr=people[i]
-           if thisScoreCard.peopleMarks[personStr]==True:
-               print(i+1,".",personStr+"(Y)")
+           if thisScoreCard.peopleMarks[personStr]!=False:
+               print(i+1,".",personStr+"("+str(thisScoreCard.peopleMarks[personStr])+")")
            else:
             print(i+1,".",personStr)
         people_int=input("Pick a person [1.."+str(len(people))+"]")
         self.person=people[int(people_int)-1]
 
+        for i in range (len(rooms)):
+            #scard is a gamecard
+            roomStr=rooms[i]
+            if thisScoreCard.roomMarks[roomStr]!=False:
+              print(i+1,".",roomStr+"("+str(thisScoreCard.roomMarks[roomStr])+")")
+            else:
+              print(i + 1, ".", roomStr)
+        room_int=input("Pick a room [1.."+str(len(rooms))+"]")
+        self.room=rooms[int(room_int)-1]
 
         for i in range (len(weapons)):
             weaponStr=weapons[i]
-            if thisScoreCard.weaponMarks[weaponStr]==True:
-                print(i+1,".",weaponStr+"(Y)")
+            if thisScoreCard.weaponMarks[weaponStr]!=False:
+                print(i+1,".",weaponStr+"("+str(thisScoreCard.weaponMarks[weaponStr])+")")
             else:
                 print(i+1,".",weaponStr)
         weapon_int=input("Pick a weapon [1.."+str(len(weapons))+"]")
@@ -62,7 +62,7 @@ class scoreCard:
         self.weaponMarks = dict.fromkeys(weapons, False)
         self.peopleMarks = dict.fromkeys(people, False)
         for i in range(len(hand)):
-            #take each card and mark it
+            #take each card and mark it True for everything in the player's hand
             card=hand[i]
             if card in rooms:
                 dict.update(self.roomMarks,{card:True})
@@ -71,13 +71,13 @@ class scoreCard:
             if card in people:
                 dict.update(self.peopleMarks,{card:True})
 
-    def markScorecard(self, acard):
+    def markScorecard(self, acard, playerNumber):
         if acard in rooms:
-            dict.update(self.roomMarks,{acard:True})
+            dict.update(self.roomMarks,{acard:playerNumber})
         if acard in weapons:
-            dict.update(self.weaponMarks,{acard:True})
+            dict.update(self.weaponMarks,{acard:playerNumber})
         if acard in people:
-            dict.update(self.peopleMarks,{acard:True})
+            dict.update(self.peopleMarks,{acard:playerNumber})
 
     def printme(self):
         print(self.roomMarks)
@@ -144,8 +144,16 @@ class CluedoGame:
             if (len(matches)>0):
                 foundMatch=True
                 if (checkPlayer==1):
+                    if (len(matches)==1):
                     # will need to prompt player which card to show - random for now#
-                    showCard = rd.choice(matches)
+                        showCard = rd.choice(matches)
+                        print("You showed ",showCard," to player ",str(playerNumber))
+                    else:
+                        print("more than one card matches, which one would you like to show?")
+                        for c in range(len(matches)):
+                            print(c+1,".",matches[c])
+                        choice=input("pick 1.."+str(c+1))
+                        showCard=matches[int(choice)-1]
                 else:
                     #pick a card at random to show
                     showCard=rd.choice(matches)
@@ -161,26 +169,26 @@ class CluedoGame:
             #only show the card for player 1
             if (playerNumber==1):
                 print(showCard)
-            self.gamecards[playerNumber-1].markScorecard(showCard)
+            self.gamecards[playerNumber-1].markScorecard(showCard,checkPlayer)
             # Mark the card self.gamecards[playerNumber]
         else:
             print("no match found")
-            #will need to do some special code here when no match found to knock out all the options if we didnt have the card
+            #when no match found to knock out all the options if we didnt have the card
             if aGuess.person not in self.hands[playerNumber-1]:
-                # mark everything other than aGuess.Person=True
+                # mark everything other than aGuess.Person=True; Eventually change this to not overwrite info about what's in other players hands
                 for  p in people:
-                    if p!=aGuess.person:
-                        dict.update(self.gamecards[playerNumber-1].peopleMarks, {p: True})
+                    if p!=aGuess.person and self.gamecards[playerNumber-1].peopleMarks[p]==False: #update every other person other than the guess person
+                        dict.update(self.gamecards[playerNumber-1].peopleMarks, {p: "No Match"})
             if aGuess.weapon not in self.hands[playerNumber-1]:
                 # mark everything other than aGuess.Person=True
                 for  w in weapons:
-                    if w!=aGuess.weapon:
-                        dict.update(self.gamecards[playerNumber - 1].weaponMarks, {w: True})
+                    if w!=aGuess.weapon and self.gamecards[playerNumber-1].weaponMarks[w]==False: #update every other weapon than than the guess weapon
+                        dict.update(self.gamecards[playerNumber - 1].weaponMarks, {w: "No Match"})
             if aGuess.room not in self.hands[playerNumber-1]:
                 # mark everything other than aGuess.Person=True
                 for  r in rooms:
-                    if r!=aGuess.room:
-                        dict.update(self.gamecards[playerNumber - 1].roomMarks, {r: True})
+                    if r!=aGuess.room and self.gamecards[playerNumber-1].roomMarks[r]==False: #update every other  room apart from the guess room
+                        dict.update(self.gamecards[playerNumber - 1].roomMarks, {r: "No Match"})
         return foundMatch
 
     def KnowAnswer(self, playerNum):

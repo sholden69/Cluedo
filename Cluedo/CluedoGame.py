@@ -4,11 +4,11 @@ def main():
     numPlayers=3
     print("CLUEDO")
     cg=cu.startGame(numPlayers)
-    cg.revealSecret()
     gameOn=True
     currentPlayer=1
     while gameOn:
         print("********* Player "+str(currentPlayer)+"***************")
+        cg.revealSecret()
         if cg.KnowAnswer(currentPlayer):
             print("move to the middle to win the game with")
             finalAnswer = cg.GetAnswer(currentPlayer)
@@ -29,7 +29,7 @@ def main():
             gs.computer_populate_guess(cg.gamecards[currentPlayer-1])
 
         # Now ask a question
-        print("ask a question")
+
         cg.ask_question(gs,currentPlayer)
 
         #Check to continue after human player go
