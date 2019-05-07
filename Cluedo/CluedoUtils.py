@@ -1,8 +1,12 @@
 import random as rd
 
+# Define immutable tuples for each of the game dimensions
 rooms=('Hall','Lounge','Dining Room','Kitchen','Ballroom','Conservatory','Billiard Room','Library','Study')
 people=('Miss Scarlet','Reverend Green','Mr Peacock','Mrs White','Professor Plum','Colonel Mustard')
 weapons=('Dagger','Candlestick','Revolver','Rope','Lead Piping','Spanner')
+
+#define the game dimensions. Look to remove boiler plate by having a guess consist of an array of game_dimensions
+game_dimensions=('rooms','people','weapons')
 
 class guess:
     def __init__(self):

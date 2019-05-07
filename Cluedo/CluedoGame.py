@@ -1,7 +1,9 @@
 import CluedoUtils as cu
 
+
 def main():
-    numPlayers=3
+    numPlayers=int(input("How many players?"))
+    assert (numPlayers>=2 and numPlayers<=6), "number of players must be between 2 and 6"
     print("CLUEDO")
     cg=cu.startGame(numPlayers)
     gameOn=True
