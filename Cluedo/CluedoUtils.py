@@ -1,4 +1,5 @@
 import random as rd
+import csv
 
 # Define immutable tuples for each of the game dimensions
 rooms=('Hall','Lounge','Dining Room','Kitchen','Ballroom','Conservatory','Billiard Room','Library','Study')
@@ -7,6 +8,43 @@ weapons=('Dagger','Candlestick','Revolver','Rope','Lead Piping','Spanner')
 
 #define the game dimensions. Look to remove boiler plate by having a guess consist of an array of game_dimensions
 game_dimensions=('rooms','people','weapons')
+
+class board:
+    def __init__(self,filename):
+       # self.boardData=[line.split(',') for line in open(filename)]
+
+       with open(filename, newline="\n") as f:
+            csvreader = csv.reader(f, delimiter=',')
+            i=0
+            for row in csvreader:
+                if (i==0):
+                    self.maxx=int(row[1])
+                    self.maxy=int(row[2])
+                    self.boardData = [[-1 for x in range(self.maxx+1)] for y in range(self.maxy+1)]
+                else:
+                    for c in range(len(row)):
+                        self.boardData[c][i-1]=int(row[c])
+                i=i+1
+
+    def display(self):
+        for y in range(self.maxy):
+            lineStr=""
+            for x in range(self.maxx):
+                item=self.boardData[x-1][y-1]
+               # print("x:",x," y:",y,"item:",item)
+                if (item==-1):
+                    lineStr=lineStr+"*"
+                if (item & 3==1 ):
+                    lineStr=lineStr+"R"
+                if (item & 3==3):
+                    lineStr=lineStr+"_"
+                if (item & 3==0):
+                    lineStre=lineStr+"."
+            print("Row:"+str(y)+":"+lineStr)
+            str1=""
+            for i in range(self.maxx):
+                str1=str1+str(self.boardData[i][y-1])+","
+            #print(str1)
 
 class guess:
     def __init__(self):
