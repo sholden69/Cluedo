@@ -44,7 +44,15 @@ class board:
             str1=""
             for i in range(self.maxx):
                 str1=str1+str(self.boardData[i][y-1])+","
-            #print(str1)
+           #print(str1)
+
+    def listNumbers(self):
+        for y in range(self.maxy):
+            lineStr = ""
+            for x in range(self.maxx):
+                lineStre=lineStr+str(self.boardData[x - 1][y - 1])
+            print("Row:" + str(y) + ":" + lineStr)
+
 
 class guess:
     def __init__(self):
