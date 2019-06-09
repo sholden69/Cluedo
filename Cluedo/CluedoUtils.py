@@ -30,17 +30,20 @@ class board:
         for y in range(self.maxy):
             lineStr=""
             for x in range(self.maxx):
-                item=self.boardData[x-1][y-1]
-               # print("x:",x," y:",y,"item:",item)
-                if (item==-1):
+                item=self.boardData[x][y]
+               # print("x:",x+1," y+1:",y,"item:",item)
+                if (item==-1): #Solid wall
                     lineStr=lineStr+"*"
-                if (item & 3==1 ):
-                    lineStr=lineStr+"R"
-                if (item & 3==3):
-                    lineStr=lineStr+"_"
-                if (item & 3==0):
-                    lineStre=lineStr+"."
-            print("Row:"+str(y)+":"+lineStr)
+                else:
+                    if ((item & 3)==1 ):   #We're in a room
+                        lineStr=lineStr+chr(ord("A")-1+((item & 60) >> 2))
+                    if ((item & 3)==3):  #Door
+                        lineStr=lineStr+"_"
+                    if ((item & 3)==0):  #Passage
+                        lineStr=lineStr+"."
+                    if  ((item & 3)==2): # Start square
+                        lineStr=lineStr+chr(ord("1")-1+((item & 28) >> 2))
+            print("Row:"+str(y+1)+":"+lineStr)
             str1=""
             for i in range(self.maxx):
                 str1=str1+str(self.boardData[i][y-1])+","
@@ -50,8 +53,9 @@ class board:
         for y in range(self.maxy):
             lineStr = ""
             for x in range(self.maxx):
-                lineStre=lineStr+str(self.boardData[x - 1][y - 1])
-            print("Row:" + str(y) + ":" + lineStr)
+                print("x:",x+1,"y:",y+1,"item:",self.boardData[x][y])
+                lineStr=lineStr+str(self.boardData[x][y])+","
+          #  print("Row:" + str(y) + ":" + lineStr)
 
 
 class guess:
