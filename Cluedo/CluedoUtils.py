@@ -6,6 +6,14 @@ rooms=('Hall','Lounge','Dining Room','Kitchen','Ballroom','Conservatory','Billia
 people=('Miss Scarlet','Reverend Green','Mr Peacock','Mrs White','Professor Plum','Colonel Mustard')
 weapons=('Dagger','Candlestick','Revolver','Rope','Lead Piping','Spanner')
 
+# Re-arrange encoding to match the Cluedo Card Order.
+MrsWhite=1
+MissScarlet=2
+RevGreen=3
+MrPeacock=4
+ProfPlum=5
+ColMustard=6
+
 #define the game dimensions. Look to remove boiler plate by having a guess consist of an array of game_dimensions
 game_dimensions=('rooms','people','weapons')
 
@@ -168,6 +176,8 @@ class CluedoGame:
         self.gamecards = []
         for i in range(numPlayers):
             self.gamecards.append(scoreCard(self.hands[i]))
+
+        self.gameBoard=board("CluedoBoard.csv")
 
     def revealSecret(self):
         print("Top Secret:", self.killer, self.murder_room, self.murder_weapon)

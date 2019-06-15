@@ -18,6 +18,8 @@ def main():
             gameOn = False
             exit(0)
 
+        cg.gameBoard.display()
+
         print("make a move - will come here")
 
         # Now sort out a guess
